@@ -64,6 +64,7 @@ public class BookDAOExt extends DAO<Book> {
         if (null == bookToDelete){
             throw new Exception(Constants.NO_BOOK_FOUND);
         }
+        System.out.println(Constants.DELETED_BOOK);
         super.delete(bookToDelete);
     }
 

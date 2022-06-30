@@ -93,7 +93,12 @@ public class Orchestrator {
 
             switch (opc) {
                 case 1: //create a book
-                    BOOK_SERVICE.createAndSaveBook();
+                    try {
+                        BOOK_SERVICE.createAndSaveBook();
+                    } catch (Exception e) {
+                        System.out.println(Constants.ERROR_OCURRED);
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 2: //show all books
                     BOOK_SERVICE.showAllBooks();

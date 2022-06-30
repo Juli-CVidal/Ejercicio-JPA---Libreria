@@ -19,7 +19,7 @@ public class AuthorService {
 
     public Author createAuthor() {
         Author newAuthor = new Author();
-        newAuthor.setName(Input.askString(Constants.ASK_NAME));
+        newAuthor.setName(Input.askString(Constants.ASK_AUTHOR_NAME));
         newAuthor.setEnabled(Input.askBoolean(Constants.ASK_AVAILABLE_AUTHOR));
         return newAuthor;
     }
@@ -36,7 +36,7 @@ public class AuthorService {
              }
 
              Author authorToModify = DAO.getAuthorById(id);
-             authorToModify.setName(Input.askString(Constants.ASK_NAME));
+             authorToModify.setName(Input.askString(Constants.ASK_AUTHOR_NAME));
              authorToModify.setEnabled(Input.askBoolean(Constants.ASK_AVAILABLE_AUTHOR));
              DAO.edit(authorToModify);
             
@@ -78,7 +78,7 @@ public class AuthorService {
         try {
             Integer id = Input.askInteger(Constants.ASK_AUTHOR_ID);
             if (null == id) {
-                throw new Exception(Constants.NO_NAME_ENTERED);
+                throw new Exception(Constants.INVALID_ID);
             }
             Author returnedAuthor = DAO.getAuthorById(id);
             if (null == returnedAuthor) {
@@ -94,7 +94,7 @@ public class AuthorService {
 
     public void showAuthorByName() {
         try {
-            String name = Input.askString(Constants.ASK_NAME);
+            String name = Input.askString(Constants.ASK_AUTHOR_NAME);
             if (null == name) {
                 throw new Exception(Constants.NO_NAME_ENTERED);
             }

@@ -10,10 +10,18 @@ import java.util.List;
 
 public class EditorialDAOExt extends DAO<Editorial> {
 
+    public Integer countEditorials() {
+        return em.createQuery("SELECT count(e.id) FROM Editorial e").getFirstResult();
+    }
+
+    public boolean existEditorial() {
+        return 0 != countEditorials();
+    }
+
     public List<Editorial> getAllEditorials() {
         connect();
         List<Editorial> returnedEditorials = em.createQuery(
-                "SELECT e FROM editorial e")
+                "SELECT e FROM Editorial e")
                 .getResultList();
 
         disconnect();
@@ -26,7 +34,7 @@ public class EditorialDAOExt extends DAO<Editorial> {
         }
         connect();
         Editorial returnedEditorial = (Editorial) em.createQuery(
-                "SELECT e FROM editorial e WHERE e.id LIKE :id").
+                "SELECT e FROM Editorial e WHERE e.id LIKE :id").
                 setParameter("id", id)
                 .getSingleResult();
 
@@ -40,7 +48,7 @@ public class EditorialDAOExt extends DAO<Editorial> {
         }
         connect();
         Editorial returnedEditorial = (Editorial) em.createQuery(
-                "SELECT e FROM editorial e WHERE e.name LIKE :name")
+                "SELECT e FROM Editorial e WHERE e.name LIKE :name")
                 .setParameter("name", name)
                 .getSingleResult();
 
@@ -60,6 +68,7 @@ public class EditorialDAOExt extends DAO<Editorial> {
         if (false == editorialToDelete.getEnabled()) {
             throw new Exception(Constants.EDITORIAL_ALREADY_UNAVAILABLE);
         }
+        System.out.println(Constants.UNAVAILABLE_EDITORIAL);
         editorialToDelete.setEnabled(false);
         super.edit(editorialToDelete);
     }
@@ -76,6 +85,7 @@ public class EditorialDAOExt extends DAO<Editorial> {
         if (true == editorialToDelete.getEnabled()) {
             throw new Exception(Constants.EDITORIAL_ALREADY_AVAILABLE);
         }
+        System.out.println(Constants.AVAILABLE_EDITORIAL);
         editorialToDelete.setEnabled(true);
         super.edit(editorialToDelete);
     }

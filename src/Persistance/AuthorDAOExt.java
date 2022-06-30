@@ -10,6 +10,14 @@ import java.util.List;
 
 public class AuthorDAOExt extends DAO<Author> {
 
+    public Integer countAuthors() {
+        return em.createQuery("SELECT count(a.id) FROM Author a").getFirstResult();
+    }
+
+    public boolean existAuthor() {
+        return 0 != countAuthors();
+    }
+
     public List<Author> getAllAuthors() {
         connect();
         List<Author> returnedAuthors = em.createQuery(
@@ -60,6 +68,7 @@ public class AuthorDAOExt extends DAO<Author> {
         if (false == authorToDelete.getEnabled()) {
             throw new Exception(Constants.AUTHOR_ALREADY_UNAVAILABLE);
         }
+        System.out.println(Constants.UNAVAILABLE_AUTHOR);
         authorToDelete.setEnabled(false);
         super.edit(authorToDelete);
     }
@@ -76,6 +85,7 @@ public class AuthorDAOExt extends DAO<Author> {
         if (true == authorToDelete.getEnabled()) {
             throw new Exception(Constants.AUTHOR_ALREADY_AVAILABLE);
         }
+        System.out.println(Constants.AVAILABLE_AUTHOR);
         authorToDelete.setEnabled(true);
         super.edit(authorToDelete);
     }

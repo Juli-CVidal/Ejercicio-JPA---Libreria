@@ -19,7 +19,7 @@ public class EditorialService {
 
     public Editorial createEditorial() {
         Editorial newEditorial = new Editorial();
-        newEditorial.setName(Input.askString(Constants.ASK_NAME));
+        newEditorial.setName(Input.askString(Constants.ASK_EDITORIAL_NAME));
         newEditorial.setEnabled(Input.askBoolean(Constants.ASK_AVAILABLE_EDITORIAL));
         return newEditorial;
     }
@@ -36,7 +36,7 @@ public class EditorialService {
             }
 
             Editorial authorToModify = DAO.getEditorialById(id);
-            authorToModify.setName(Input.askString(Constants.ASK_NAME));
+            authorToModify.setName(Input.askString(Constants.ASK_EDITORIAL_NAME));
             authorToModify.setEnabled(Input.askBoolean(Constants.ASK_AVAILABLE_EDITORIAL));
             DAO.edit(authorToModify);
 
@@ -48,7 +48,7 @@ public class EditorialService {
 
     public void makeAnEditorialUnavailable() {
         try {
-            Integer id = Input.askInteger(Constants.ASK_AUTHOR_ID);
+            Integer id = Input.askInteger(Constants.ASK_EDITORIAL_ID);
             if (null == id || 0 >= id) {
                 throw new Exception(Constants.INVALID_ID);
             }
@@ -62,7 +62,7 @@ public class EditorialService {
 
     public void makeAnEditorialAvailable() {
         try {
-            Integer id = Input.askInteger(Constants.ASK_AUTHOR_ID);
+            Integer id = Input.askInteger(Constants.ASK_EDITORIAL_ID);
             if (null == id || 0 >= id) {
                 throw new Exception(Constants.INVALID_ID);
             }
@@ -78,7 +78,7 @@ public class EditorialService {
         try {
             Integer id = Input.askInteger(Constants.ASK_EDITORIAL_ID);
             if (null == id) {
-                throw new Exception(Constants.NO_NAME_ENTERED);
+                throw new Exception(Constants.INVALID_ID);
             }
             Editorial returnedEditorial = DAO.getEditorialById(id);
             if (null == returnedEditorial) {
@@ -94,7 +94,7 @@ public class EditorialService {
 
     public void showEditorialByName() {
         try {
-            String name = Input.askString(Constants.ASK_NAME);
+            String name = Input.askString(Constants.ASK_EDITORIAL_NAME);
             if (null == name) {
                 throw new Exception(Constants.NO_NAME_ENTERED);
             }

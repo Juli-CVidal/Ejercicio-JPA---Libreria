@@ -5,20 +5,31 @@ package Services;
 
 // @author JulianCVidal
 import Constants.Constants;
-import Entities.Book;
-import Persistance.BookDAOExt;
+import Entities.*;
+import Persistance.AuthorDAOExt;
+import Persistance.*;
 import java.util.List;
 
 public class BookService {
 
     private final BookDAOExt DAO = new BookDAOExt();
+    private final AuthorDAOExt authorDAO = new AuthorDAOExt();
+    private final EditorialDAOExt editorialDAO = new EditorialDAOExt();
 
-    public void createAndSaveBook() {
+    public void createAndSaveBook() throws Exception {
         saveBook(createBook());
         System.out.println(Constants.BOOK_ADDED);
     }
 
-    public Book createBook() {
+    public Book createBook() throws Exception {
+        if (!authorDAO.existAuthor()) {
+            throw new Exception(Constants.NO_AUTHOR_CREATED);
+        }
+        
+        if (!editorialDAO.existEditorial()) {
+            throw new Exception(Constants.NO_EDITORIAL_FOUND);
+        }
+
         Book newBook = new Book();
         newBook.setIsbn(Input.askInteger(Constants.ASK_BOOK_ISBN));
         newBook.setTitle(Input.askString(Constants.ASK_BOOK_TITLE));
@@ -29,16 +40,49 @@ public class BookService {
         newBook.setRemainingCopies(copies);
         newBook.setBorrowedCopies(0);
 
-        newBook.setEnabled(Input.askBoolean(Constants.ASK_DISCHARGED_BOOK));
+        newBook.setEnabled(Input.askBoolean(Constants.ASK_AVAILABLE_BOOK));
+
+        Author author = askAuthor();
+        newBook.setAuthor(author);
+
+        Editorial editorial = askEditorial();
+        newBook.setEditorial(editorial);
 
         return newBook;
     }
 
+    private Author askAuthor() throws Exception {
+        String authorName;
+        Author returnedAuthor;
+        do {
+            authorName = Input.askString(Constants.ASK_AUTHOR_NAME);
+            returnedAuthor = authorDAO.getAuthorByName(authorName);
+            if (null == returnedAuthor) {
+                System.out.println(Constants.NO_AUTHOR_FOUND);
+            }
+        } while (null == returnedAuthor);
+        return returnedAuthor;
+    }
+
+    private Editorial askEditorial() throws Exception {
+        String editorialName;
+        Editorial returnedEditorial;
+
+        do {
+            editorialName = Input.askString(Constants.ASK_EDITORIAL_NAME);
+            returnedEditorial = editorialDAO.getEditorialByName(editorialName);
+            if (null == returnedEditorial) {
+                System.out.println(Constants.NO_EDITORIAL_FOUND);
+            }
+        } while (null == returnedEditorial);
+        return returnedEditorial;
+    }
+
     public void showBookByIsbn() {
-         try {
+        try {
             Integer isbn = Input.askInteger(Constants.ASK_BOOK_ISBN);
             if (null == isbn) {
-                throw new Exception(Constants.NO_NAME_ENTERED);
+                throw new Exception(Constants.INVALID_ISBN);
             }
             Book returnedBook = DAO.getBookByIsbn(isbn);
             if (null == returnedBook) {
@@ -51,9 +95,9 @@ public class BookService {
             System.out.println(e.toString());
         }
     }
-    
+
     public void showBookByTitle() {
-     try {
+        try {
             String title = Input.askString(Constants.ASK_BOOK_TITLE);
             if (null == title) {
                 throw new Exception(Constants.NO_NAME_ENTERED);
@@ -67,7 +111,8 @@ public class BookService {
         } catch (Exception e) {
             System.out.println(Constants.ERROR_OCURRED);
             System.out.println(e.toString());
-        }    }
+        }
+    }
 
     public void showBooksByAuthor() {
         try {
@@ -112,7 +157,7 @@ public class BookService {
                 return;
             }
             if (0 == bookToModify.getRemainingCopies()) {
-                System.out.println(Constants.NO_COPIES_LEFT);
+                System.out.println(Constants.ALL_BORROWED_COPIES);
                 return;
             }
 
@@ -154,6 +199,5 @@ public class BookService {
     public void showAllBooks() {
         DAO.getAllBooks().forEach(System.out::println);
     }
-
 
 }
