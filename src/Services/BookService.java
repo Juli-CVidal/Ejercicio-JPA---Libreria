@@ -7,7 +7,9 @@ package Services;
 import Constants.Constants;
 import Entities.*;
 import Persistance.AuthorDAOExt;
-import Persistance.*;
+import Persistance.BookDAOExt;
+import Persistance.EditorialDAOExt;
+
 import java.util.List;
 
 public class BookService {
