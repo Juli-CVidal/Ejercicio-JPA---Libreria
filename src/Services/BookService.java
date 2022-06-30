@@ -29,7 +29,7 @@ public class BookService {
         }
         
         if (!editorialDAO.existEditorial()) {
-            throw new Exception(Constants.NO_EDITORIAL_FOUND);
+            throw new Exception(Constants.NO_EDITORIAL_CREATED);
         }
 
         Book newBook = new Book();
